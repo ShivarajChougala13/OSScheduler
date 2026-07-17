@@ -1,0 +1,198 @@
+//create 
+touch file.txt        # create file
+mkdir folder          # create folder
+mkdir -p a/b/c        # create nested folders
+
+// view/list
+
+ls                    # list files
+ls -l                 # detailed view (permissions, size, owner)
+ls -a                 # include hidden files
+pwd                   # current directory
+
+// 
+
+// Navigate
+
+cd folder             # go into folder
+cd ..                 # go up one level
+cd ~                  # go to home
+
+// Copy
+
+cp file.txt copy.txt
+cp -r folder1 folder2   # copy folder
+
+// Move. Rename
+
+mv file.txt new.txt        # rename
+mv file.txt folder/        # move file
+
+// Delete 
+
+rm file.txt                # delete file
+rm -r folder               # delete folder
+rm -rf folder              # force delete (dangerous)
+
+
+
+-- //  Permissions
+
+// View Permissions
+
+ls -l
+
+
+// Change Permissions
+
+// using symbols
+
+chmod +x script.sh      # add execute
+chmod -w file.txt       # remove write
+chmod u+x file.txt      # user execute
+chmod g-w file.txt      # group remove write
+
+
+// Using numbers 
+
+chmod 755 file
+chmod 644 file
+
+
+// change owner 
+
+chown user file
+chown user:group file
+
+
+// File info and search 
+
+cat file.txt           # view content
+less file.txt          # scroll view
+head file.txt          # first lines
+tail file.txt          # last lines
+
+find . -name "file.txt"
+grep "word" file.txt
+
+
+// Disk usage
+
+du -sh folder
+df -h
+
+// Permissions + sudo
+
+sudo rm file.txt
+sudo chmod 777 file
+
+// Hidden files
+
+ls -a   .. (. files are hidden)
+
+{
+    macOs uses POSIX permissions
+
+    * Every file has its owner groupd and permission bits 
+    * kernel checks permissions before allowing access
+
+
+}
+
+
+
+                                                    // c language to decalare variable styles
+
+    * snake case (traditional style) -> all small letter words separated by _
+    * camel case (modern) -> first letter of each word after first word is capitalized
+    * constants (such as const or #define)
+
+
+
+
+
+                                                    --- File reading -- 
+
+FILE *fp=fopen("file.txt","r");
+
+"r"  → read
+"w"  → write (overwrite)
+"a"  → append
+"r+" → read + write
+
+read->
+
+-- 
+-- read(formatted);
+-- fscanf(fp,"%d %s",&x,str);
+-- fgets(buffer, size, fp); // read line
+-- fprintf(fp, "%d %s\n", x, str); // write
+-- fclose(fp); //write
+
+
+
+3. User-Defined Data TypesCustom types defined by the user:
+* Structure (struct): Groups different data types together.
+* Union (union): Similar to structures but shares the same memory for all members.
+* Enumeration (enum): Defines a set of named integer constants.
+* Typedef: Defines an alias for an existing type.
+* short/long: Adjusts the memory allocation size.
+
+
+
+
+
+
+
+
+
+**************************************
+
+about the project--->
+
+there are mulitple queues from process birth to termination
+(1) process new state not yet admitted -> job queue
+(2) once process is admitted it is ready to be executed -> ready queue
+(3) once i/o request calls -> i/o queue
+(4) if ready queue is filled swapped to space called -> swape space
+
+
+// execution time / session time : the total duration of usgae of an application.
+
+** The Burst Time (specifically "CPU Burst Time") is the amount of time the process spends in state #1 before moving to state #2.
+
+
+
+""""""""""""""""""""""""""""Round Robin or Multilevel Feedback Queues""""""""""""""""""""""""""""
+
+
+
+// all the functions should be executed only after the main function.. 
+// we cant call the functions before main function. 
+
+
+
+ipcs -m --- important command to check about shared memory access
+
+
+
+SIGKILL	force terminate
+SIGTERM	polite terminate
+SIGSTOP	pause process
+SIGCONT	continue process
+SIGINT	Ctrl+C
+
+kill(pid,sig)	send signal to another process
+raise(sig)	send signal to self
+
+
+
+
+
+Why can malloc() fail?
+
+Because the system may:
+
+run out of memory,
+hit memory limits,
+fail to allocate a contiguous block.
