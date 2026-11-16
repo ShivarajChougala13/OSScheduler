@@ -9,11 +9,14 @@
 #include "./PCBHeader.h"
 
 PCB* getNewPCB(){
-    PCB* newPCB=(PCB*) malloc(sizeof(PCB));
-    PCB* newPCB=NULL;
+    PCB* newPCB = (PCB*)malloc(sizeof(PCB));
+    if(newPCB == NULL){
+        perror("memory allocation failed in PCB\n");
+        exit(EXIT_FAILURE);
+    }
     return newPCB;
 }
-PCB* create_PCB( int pid,state state, unsigned int arrival_time, unsigned int system_arrival_time, unsigned int waiting_time, unsigned int burst_time,
+PCB* create_PCB( int pid, state state, unsigned int arrival_time, unsigned int system_arrival_time, unsigned int waiting_time, unsigned int burst_time,
     unsigned int start_time, unsigned int remaining_time, unsigned int end_time, size_t start_address, size_t size, int priority){
     
     PCB* newPCB=getNewPCB(); // memory allocate
@@ -29,6 +32,10 @@ PCB* create_PCB( int pid,state state, unsigned int arrival_time, unsigned int sy
                     newPCB->pageTable.start_address=start_address;
                     newPCB->pageTable.size=size;
                     newPCB->priority=priority;     
+                    newPCB->io_after=0;
+                    newPCB->io_burst=0;
+                    newPCB->io_remaining=0;
+                    newPCB->io_done=0;
                 return newPCB;
     }
 void print_pcb(PCB* pcb){
@@ -37,7 +44,7 @@ void print_pcb(PCB* pcb){
             printf("PCB haven't created\n");
             return ;
         }
-        printf("%d %d %u %u %u %u %u %u %u %zu %zu %d\n",
+        printf("%d %d %u %u %u %u %u %u %u %zu %zu %d %u %u\n",
         cur->pid,
         cur->state,
         cur->arrival_time,
@@ -49,10 +56,19 @@ void print_pcb(PCB* pcb){
         cur->end_time,
         cur->pageTable.start_address,
         cur->pageTable.size,
-        cur->priority
+        cur->priority,
+        cur->io_after,
+        cur->io_burst
         );
         
         return;
+}
+
+void setIORequest(struct PCB* pcb, unsigned int io_after, unsigned int io_burst){
+    pcb->io_after=io_after;
+    pcb->io_burst=io_burst;
+    pcb->io_remaining=0;
+    pcb->io_done=0;
 }
 
 void updateProcessStatus(struct PCB* pcb, state state){
@@ -63,7 +79,13 @@ void updateArrivalTime(struct PCB* pcb, unsigned int arrivalTime){
     pcb->arrival_time=arrivalTime;
 }
 void updateRemainingTime(struct PCB* pcb){
-    pcb->remaining_time--;
+    // remaining_time is unsigned, so never go below 0
+    if(pcb->remaining_time > 0){
+        pcb->remaining_time--;
+    }
+}
+void updateStartTime(struct PCB* pcb, unsigned int startTime){
+    pcb->start_time=startTime;
 }
 void updateEndTime(struct PCB* pcb, unsigned int endTime){
     pcb->end_time=endTime;

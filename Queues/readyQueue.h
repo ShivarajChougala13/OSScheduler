@@ -1,5 +1,5 @@
-#ifndef READYQUEUE
-#define READYQUEUE
+#ifndef READYQUEUE_H
+#define READYQUEUE_H
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
@@ -23,5 +23,6 @@ void startReadyQueue();
 struct ReadyQueue* getNewNode(); // memory allocation
 bool addProcessInReadyQueue(struct PCB* pcb);
 bool removeReadyQueueProcess(struct PCB* pcb);
+bool isReadyQueueEmpty();
 
 #endif

@@ -4,21 +4,20 @@
 #include "../Clock/clock.h"
 
 void longTermScheduler(){
-    // remove process from job queue
-    // add process to ready queue
+    while(!isJobQueueEmpty()){
+        struct PCB* pcb = getJobQueueFront();
+        if(pcb == NULL){
+            break;
+        }
 
-   while(!isJobQueueEmpty()){
-    struct PCB* pcb=getJobQueueFront();
-    bool status=addProcessInReadyQueue(pcb);    // to ready Queue
-    if(status==true){
-    removeJobQueueProcess();
-    updateProcessStatus(pcb,readyState);    // change process state
-    changeArrivalTime(pcb,*clk);
-
+        bool status = addProcessInReadyQueue(pcb);
+        if(status == true){
+            removeJobQueueProcess();
+            updateProcessStatus(pcb, readyState);
+            updateArrivalTime(pcb, *clk);
+            printf("[Time %d] Process %d moved to Ready Queue\n", *clk, pcb->pid);
+        } else {
+            break;      // ready queue is full, process waits in job queue
+        }
     }
-    else{
-        break;
-    }
-   }
-
 }

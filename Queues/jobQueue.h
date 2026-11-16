@@ -1,5 +1,5 @@
-#ifndef JOBQUEUE.h
-#define JOBQUEUE.h
+#ifndef JOBQUEUE_H
+#define JOBQUEUE_H
 #include<stdio.h>
 #include<stdlib.h>
 #include "../Process/PCBHeader.h"
@@ -24,6 +24,7 @@ void printJobQueue();
 void startJobQueue();
 struct PCB* getJobQueueFront();
 bool isJobQueueEmpty();
-extern struct JobQueue jobQueue;
+void jobAdmit();            // read all processes from input file
+void checkNewArrivals();    // move processes whose arrival time has come into job queue
 
 #endif

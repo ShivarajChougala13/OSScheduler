@@ -34,6 +34,13 @@ typedef struct PCB{
     int priority;
     pageTable pageTable;
 
+    // i/o request : after running io_after cpu ticks the process goes to blocked queue for io_burst ticks
+    // io_after = 0 means the process never asks for i/o
+    unsigned int io_after;
+    unsigned int io_burst;
+    unsigned int io_remaining;  // ticks left in the blocked queue
+    int io_done;                // 1 after the i/o is finished (i/o is requested only once)
+
 // system_arrival_time
 // ready_enter_time
 } PCB;
@@ -54,9 +61,11 @@ PCB* create_PCB(
     size_t size,
     int priority);
 void print_pcb(PCB* pcb);
+void setIORequest(struct PCB* pcb, unsigned int io_after, unsigned int io_burst);
 void updateProcessStatus(struct PCB* pcb, state state);
 void updateWaitingTime(struct PCB* pcb, unsigned int waitingTime);
 void updateEndTime(struct PCB* pcb, unsigned int endTime);
+void updateStartTime(struct PCB* pcb, unsigned int startTime);
 void updateRemainingTime(struct PCB* pcb);
 void updateArrivalTime(struct PCB* pcb, unsigned int arrivalTime);
 void updateSystemArrivalTime(struct PCB* pcb, unsigned int time);

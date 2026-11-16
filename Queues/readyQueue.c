@@ -4,12 +4,13 @@
 #include "../Process/PCBHeader.h"
 
 static struct ReadyQueueInfo readyQueueInfo;
-// initialize ready queue  
+
 void initReadyQueue(int capacity){
     readyQueueInfo.front=NULL;
     readyQueueInfo.rear=NULL;
     readyQueueInfo.size=0;
     readyQueueInfo.capacity=capacity;
+    schedulerAccess.readyQueue=NULL;
 }
 
 // allocate memory 
@@ -25,39 +26,63 @@ struct ReadyQueue* getNewNode(){
 
 // start ready queue 
 void startReadyQueue(){
-    struct ReadyQueueInfo readyQueueInfo;
     int size=5;
     initReadyQueue(size);
 }
 
-// add process to ready queue by long term scheduler
 bool addProcessInReadyQueue(struct PCB* pcb){
     if(readyQueueInfo.size==readyQueueInfo.capacity) return false;
-    struct ReadyQueue* readyQueue=access.readyQueue;
+    struct ReadyQueue* newNode = getNewNode();
+    newNode->pcb = pcb;
+    newNode->next = NULL;
 
-    struct ReadyQueue* newNode=NULL;
-    newNode= getNewNode();
-    newNode->pcb=pcb;
-    newNode->next=NULL;
-
-    if(readyQueue==NULL){
-        readyQueue=newNode;
+    if(schedulerAccess.readyQueue == NULL){
+        schedulerAccess.readyQueue = newNode;
+        readyQueueInfo.front = newNode;
+        readyQueueInfo.rear = newNode;
         readyQueueInfo.size++;
-        readyQueueInfo.front=newNode;
-        readyQueueInfo.rear=newNode;
         return true;
     }
-    readyQueue->next=newNode;
-    readyQueueInfo.rear=newNode;
+
+    readyQueueInfo.rear->next = newNode;
+    readyQueueInfo.rear = newNode;
     readyQueueInfo.size++;
-    
     return true;
 }
 
-
-
-// remove process from ready queue
 bool removeReadyQueueProcess(struct PCB* pcb){
-    
+    if(schedulerAccess.readyQueue == NULL) return false;
+
+    struct ReadyQueue* current = schedulerAccess.readyQueue;
+    struct ReadyQueue* previous = NULL;
+
+    while(current != NULL){
+        if(current->pcb == pcb){
+            if(previous == NULL){
+                schedulerAccess.readyQueue = current->next;
+            } else {
+                previous->next = current->next;
+            }
+
+            if(readyQueueInfo.rear == current){
+                readyQueueInfo.rear = previous;
+            }
+            if(readyQueueInfo.front == current){
+                readyQueueInfo.front = current->next;
+            }
+
+            readyQueueInfo.size--;
+            free(current);
+            return true;
+        }
+        previous = current;
+        current = current->next;
+    }
+
+    return false;
 }
 
+bool isReadyQueueEmpty(){
+    if(readyQueueInfo.size==0) return true;
+    return false;
+}

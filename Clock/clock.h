@@ -5,6 +5,7 @@
 #include<stdio.h>
 #include<sys/shm.h>    // create shared memory 
 #include<sys/ipc.h>
+#include<sys/sem.h>    // semaphore
 #include<signal.h>  // click shared memory
 #include<unistd.h>  // sleep function
 
@@ -13,4 +14,6 @@
 
     int* getClock();
     void killClock();
+    void startSystem();
+    void stopSystem();
 #endif

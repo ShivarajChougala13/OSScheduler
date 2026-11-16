@@ -12,7 +12,7 @@
         }
 
        
-int main(){
+int info_main(){
     start();
     return 0;
 }

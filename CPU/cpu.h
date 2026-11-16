@@ -2,4 +2,5 @@
 #define CPU
 
 void execute();
+void printStatistics();
 #endif

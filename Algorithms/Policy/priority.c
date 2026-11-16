@@ -1,8 +1,20 @@
-#include "../Process/PCBHeader.h"
-#include "../Main/main.h"
+#include "../../Process/PCBHeader.h"
+#include "../../Main/main.h"
 
 struct PCB* getProcessPriority(){
-    struct PCB* process;
-    return process;
+    struct ReadyQueue* queue = schedulerAccess.readyQueue;
+    if(queue == NULL)
+        return NULL;
 
+    struct ReadyQueue* best = queue;
+    struct ReadyQueue* current = queue->next;
+
+    while(current != NULL){
+        if(current->pcb->priority < best->pcb->priority){
+            best = current;
+        }
+        current = current->next;
+    }
+
+    return best->pcb;
 }
